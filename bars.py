@@ -16,8 +16,8 @@ def get_biggest_bar(data):
     min = SeatsCount[0]
     for bar in data:
         if min == bar['Cells']['SeatsCount']:
-            print (bar['Cells']['Name'])
-            return 0
+            print ('The bigest bar is: {0}'.format(bar['Cells']['Name']))
+            return None
 
 
 def get_smallest_bar(data):
@@ -28,8 +28,8 @@ def get_smallest_bar(data):
     min = SeatsCount[-1]
     for bar in data:
         if min == bar['Cells']['SeatsCount']:
-            print (bar['Cells']['Name'])
-            return 0
+            print ('The smallest bar is: {0}'.format(bar['Cells']['Name']))
+            return None
 
 
 def get_closest_bar(data, longitude, latitude):
@@ -41,8 +41,8 @@ def get_closest_bar(data, longitude, latitude):
             distance['name'] = bar['Cells']['Name']
             distance['distance'] = dist
 
-    print (distance['name'])
-    return 0
+    print ('The closest bar is: {0}'.format(distance['name']))
+    return None
 
 
 def get_distance(x1, y1, x2, y2):
@@ -52,8 +52,8 @@ def get_distance(x1, y1, x2, y2):
 if __name__ == '__main__':
 
     bars = load_data('bars.json')
-    latitude = float(input())
-    longitude = float(input())
+    latitude = float(input('Input latitude:'))
+    longitude = float(input('Input longitude:'))
 
     get_biggest_bar(bars)
     get_smallest_bar(bars)
