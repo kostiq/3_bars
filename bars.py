@@ -1,11 +1,13 @@
 import json
 import requests
+import os
 
 
 def load_data(filepath):
+    if not os.path.exists(filepath):
+        return None
     with open(filepath, 'r') as json_file:
-        data = json.load(json_file)
-    return data
+        return json.load(json_file)
 
 
 def get_biggest_bar(data):
@@ -52,9 +54,18 @@ def get_distance(x1, y1, x2, y2):
 if __name__ == '__main__':
 
     bars = load_data('bars.json')
-    latitude = float(input('Input latitude:'))
-    longitude = float(input('Input longitude:'))
+    try:
+        latitude = float(input('Input latitude:'))
+    except ValueError:
+        latitude = None
+    try:
+        longitude = float(input('Input longitude:'))
+    except ValueError:
+        longitude = None
 
-    get_biggest_bar(bars)
-    get_smallest_bar(bars)
-    get_closest_bar(bars, longitude, latitude)
+    if (latitude or longitude) is None:
+        print ('Incorrect input data!')
+    else:
+        get_biggest_bar(bars)
+        get_smallest_bar(bars)
+        get_closest_bar(bars, longitude, latitude)
