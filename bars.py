@@ -15,9 +15,9 @@ def get_biggest_bar(data):
     for bar in data:
         SeatsCount.append(bar['Cells']['SeatsCount'])
     SeatsCount.sort()
-    min = SeatsCount[0]
+    lower = SeatsCount[0]
     for bar in data:
-        if min == bar['Cells']['SeatsCount']:
+        if lower == bar['Cells']['SeatsCount']:
             print ('The bigest bar is: {0}'.format(bar['Cells']['Name']))
             return None
 
@@ -27,15 +27,15 @@ def get_smallest_bar(data):
     for bar in data:
         SeatsCount.append(bar['Cells']['SeatsCount'])
     SeatsCount.sort()
-    min = SeatsCount[-1]
+    lower = SeatsCount[-1]
     for bar in data:
-        if min == bar['Cells']['SeatsCount']:
+        if lower == bar['Cells']['SeatsCount']:
             print ('The smallest bar is: {0}'.format(bar['Cells']['Name']))
             return None
 
 
 def get_closest_bar(data, longitude, latitude):
-    distance = dict(name='', coordinates=[], distance=1000)
+    distance = dict(name='', coordinates=[], distance=100000)
     for bar in data:
         point = bar['Cells']['geoData']['coordinates']
         dist = get_distance(longitude, latitude, point[0], point[1])
