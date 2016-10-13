@@ -11,44 +11,27 @@ def load_data(filepath):
 
 
 def get_biggest_bar(data):
-    SeatsCount = []
-    for bar in data:
-        SeatsCount.append(bar['Cells']['SeatsCount'])
-    SeatsCount.sort()
-    lower = SeatsCount[0]
-    for bar in data:
-        if lower == bar['Cells']['SeatsCount']:
-            print ('The bigest bar is: {0}'.format(bar['Cells']['Name']))
-            return None
+    return sorted(data, key=lambda data: data['Cells']['SeatsCount'])[-1]['Cells']['Name']
 
 
 def get_smallest_bar(data):
-    SeatsCount = []
-    for bar in data:
-        SeatsCount.append(bar['Cells']['SeatsCount'])
-    SeatsCount.sort()
-    lower = SeatsCount[-1]
-    for bar in data:
-        if lower == bar['Cells']['SeatsCount']:
-            print ('The smallest bar is: {0}'.format(bar['Cells']['Name']))
-            return None
+    return sorted(data, key=lambda data: data['Cells']['SeatsCount'])[0]['Cells']['Name']
 
 
 def get_closest_bar(data, longitude, latitude):
-    distance = dict(name='', coordinates=[], distance=100000)
+    closest = data[0]
     for bar in data:
-        point = bar['Cells']['geoData']['coordinates']
-        dist = get_distance(longitude, latitude, point[0], point[1])
-        if dist < distance['distance']:
-            distance['name'] = bar['Cells']['Name']
-            distance['distance'] = dist
+        closest_dist = get_distance(
+            longitude, latitude, closest['Cells']['geoData']['coordinates'])
+        temp_dist = get_distance(
+            longitude, latitude, bar['Cells']['geoData']['coordinates'])
+        if temp_dist < closest_dist:
+            closest = bar
+    return closest['Cells']['Name']
 
-    print ('The closest bar is: {0}'.format(distance['name']))
-    return None
 
-
-def get_distance(x1, y1, x2, y2):
-    return (x1 - x2)**2 + (y1 - y2)**2
+def get_distance(x1, y1, point):
+    return (x1 - point[0])**2 + (y1 - point[1])**2
 
 
 if __name__ == '__main__':
@@ -66,6 +49,7 @@ if __name__ == '__main__':
     if (latitude or longitude) is None:
         print ('Incorrect input data!')
     else:
-        get_biggest_bar(bars)
-        get_smallest_bar(bars)
-        get_closest_bar(bars, longitude, latitude)
+        print ('The biggest bar is: {0}'.format(get_biggest_bar(bars)))
+        print ('The smallest bar is: {0}'.format(get_smallest_bar(bars)))
+        print ('The closest bar is: {0}'.format(
+            get_closest_bar(bars, longitude, latitude)))
