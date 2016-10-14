@@ -1,6 +1,6 @@
 import json
-import requests
 import os
+import argparse
 
 
 def load_data(filepath):
@@ -11,20 +11,20 @@ def load_data(filepath):
 
 
 def get_biggest_bar(data):
-    return sorted(data, key=lambda data: data['Cells']['SeatsCount'])[-1]['Cells']['Name']
+    return min(data, key=lambda data: data['Cells']['SeatsCount'])['Cells']['Name']
 
 
 def get_smallest_bar(data):
-    return sorted(data, key=lambda data: data['Cells']['SeatsCount'])[0]['Cells']['Name']
+    return max(data, key=lambda data: data['Cells']['SeatsCount'])['Cells']['Name']
 
 
 def get_closest_bar(data, longitude, latitude):
     closest = data[0]
-    for bar in data:
+    for bar in data[1:]:
         closest_dist = get_distance(
-            longitude, latitude, closest['Cells']['geoData']['coordinates'])
+            latitude, longitude, closest['Cells']['geoData']['coordinates'])
         temp_dist = get_distance(
-            longitude, latitude, bar['Cells']['geoData']['coordinates'])
+            latitude, longitude, bar['Cells']['geoData']['coordinates'])
         if temp_dist < closest_dist:
             closest = bar
     return closest['Cells']['Name']
@@ -37,19 +37,13 @@ def get_distance(x1, y1, point):
 if __name__ == '__main__':
 
     bars = load_data('bars.json')
-    try:
-        latitude = float(input('Input latitude:'))
-    except ValueError:
-        latitude = None
-    try:
-        longitude = float(input('Input longitude:'))
-    except ValueError:
-        longitude = None
+    parser = argparse.ArgumentParser()
+    parser.add_argument("latitude", type=float, help="Input latitude")
+    parser.add_argument("longitude", type=float, help="Input longitude")
+    args = parser.parse_args()
 
-    if (latitude or longitude) is None:
-        print ('Incorrect input data!')
-    else:
-        print ('The biggest bar is: {0}'.format(get_biggest_bar(bars)))
-        print ('The smallest bar is: {0}'.format(get_smallest_bar(bars)))
-        print ('The closest bar is: {0}'.format(
-            get_closest_bar(bars, longitude, latitude)))
+
+    print ('The biggest bar is: {0}'.format(get_biggest_bar(bars)))
+    print ('The smallest bar is: {0}'.format(get_smallest_bar(bars)))
+    print ('The closest bar is: {0}'.format(
+        get_closest_bar(bars, args.latitude, args.longitude)))
