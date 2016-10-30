@@ -20,8 +20,6 @@ def get_smallest_bar(data):
 
 
 def get_closest_bar(data, latitude, longitude):
-    if not (latitude or longitude):
-        return 'Input correct coordinates!'
     return min(data, key=lambda data: get_distance(
         latitude, longitude, data['Cells']['geoData']['coordinates']))['Cells']['Name']
 
@@ -34,9 +32,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--path', type=str, required=True)
-    parser.add_argument('-lat', '--latitude', type=float, help='Your latitude')
+    parser.add_argument('-lat', '--latitude', type=float, help='Your latitude', required=True)
     parser.add_argument(
-        '-long', '--longitude', type=float, help='Your longitude')
+        '-long', '--longitude', type=float, help='Your longitude', required=True)
     args = parser.parse_args()
 
     bars = load_data(args.path)
